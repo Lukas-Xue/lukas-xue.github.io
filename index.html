@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lukas Xue</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👋</text></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: #1a1a1a; line-height: 1.6; background: #fafafa; }
@@ -18,7 +19,7 @@
     header p { color: #aaa; font-size: 1.05rem; margin: 0.5rem 0 1.2rem; }
     .links a { color: #93c5fd; margin-right: 1.2rem; font-size: 0.95rem; }
 
-    section { max-width: 1080px; margin: 0 auto; padding: 2.5rem 2rem; }
+    section { max-width: 1080px; margin: 0 auto; padding: 1.5rem 2rem; }
     section h2 { font-size: 1.5rem; margin-bottom: 1.4rem; padding-bottom: 0.4rem; border-bottom: 2px solid #e5e7eb; }
 
     .timeline { position: relative; margin-left: 32px; padding-left: 36px; border-left: 2px solid #d1d5db; }
@@ -90,6 +91,11 @@
 </header>
 
 <section>
+  <h2>About</h2>
+  <p style="font-size:0.95rem; color:#333; max-width:720px;">Machine Learning Engineer with a software engineering background, focused on building production-ready ML systems at scale. I also lead applied research efforts in model customization and optimization, with publications at top venues.</p>
+</section>
+
+<section>
   <h2>Experience &amp; Education</h2>
   <div class="timeline">
 
@@ -103,18 +109,18 @@
 
       <div class="tl-children">
         <div class="tl-child">
+          <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
+          <div class="tl-date">May 2025 – Present</div>
+          <div class="tl-title">MLE · Custom Model Optimization (CMO)</div>
+          <div class="tl-org">AWS Generative AI Innovation Center</div>
+          <div class="tl-desc">Leading R&D in model customization — CPT (Continuous Pretraining), SFT, Reinforcement Learning (GRPO, DPO), prompt optimization, and model steering — as well as production-ready inference optimization with SageMaker and EKS. Focused on robustness, explainability, and cost-effectiveness for enterprise LLM deployments.</div>
+        </div>
+        <div class="tl-child">
           <div class="tl-child-logo"><img src="img/trine.jpg" alt="Trine"></div>
           <div class="tl-date">Aug 2025 – Present</div>
           <div class="tl-title">M.S. in Information Studies (MSIS) · Part-time</div>
           <div class="tl-org">Trine University <span class="gpa">· GPA: 4.0/4.0</span></div>
           <div class="tl-desc">Pursuing a Master of Science in Information Studies part-time alongside full-time MLE work. Focus on data systems, information architecture, and applied research.</div>
-        </div>
-        <div class="tl-child">
-          <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
-          <div class="tl-date">May 2025 – Present</div>
-          <div class="tl-title">MLE · Custom Model Optimization (CMO)</div>
-          <div class="tl-org">AWS Generative AI Innovation Center</div>
-          <div class="tl-desc">Leading R&D in model customization — SFT, Reinforcement Learning (GRPO, DPO), and model steering. Focus on robustness, explainability, and cost-effectiveness for enterprise LLM deployments.</div>
         </div>
         <div class="tl-child">
           <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
@@ -148,13 +154,6 @@
       <div class="tl-org">Emory University <span class="gpa">· GPA: 3.938 / 4.000</span></div>
       <div class="tl-desc">Coursework in algorithms, systems, machine learning, and mathematical foundations.</div>
 
-      <div class="tl-list">
-        <div class="tl-list-label">Publications</div>
-        <ul>
-          <li><a href="https://proceedings.mlr.press/v202/ling23a.html">Deep Graph Representation Learning and Optimization for Influence Maximization</a> <span class="meta">· C. Ling, J. Jiang, J. Wang, M.T. Thai, R. Xue, J. Song, M. Qiu, L. Zhao · ICML 2023</span></li>
-        </ul>
-      </div>
-
       <div class="tl-children">
         <div class="tl-child">
           <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
@@ -182,6 +181,16 @@
       <div class="tl-desc">Liberal arts foundation at Emory's original campus before transitioning to Atlanta for upper-division CS coursework.</div>
     </div>
 
+  </div>
+</section>
+
+<section>
+  <h2>Publications</h2>
+  <div class="tl-list">
+    <ul>
+      <li><a href="https://arxiv.org/abs/2605.25166">AME-TS: Anchored Mixture-of-Experts for Time Series Forecasting</a> <span class="meta">· R. Wang, <strong style="color:#1a1a1a">R. Xue</strong>, R. Razi, H. Song, H.R. Marlowe · ICML Workshop on Structured Foundation Models, 2026</span></li>
+      <li><a href="https://proceedings.mlr.press/v202/ling23b.html">Deep Graph Representation Learning and Optimization for Influence Maximization</a> <span class="meta">· C. Ling, J. Jiang, J. Wang, M.T. Thai, <strong style="color:#1a1a1a">R. Xue</strong>, J. Song, M. Qiu, L. Zhao · International Conference on Machine Learning (ICML), 2023</span></li>
+    </ul>
   </div>
 </section>
 
