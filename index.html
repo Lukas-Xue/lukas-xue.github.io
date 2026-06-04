@@ -18,9 +18,25 @@
     header h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 0.3rem; }
     header p { color: #aaa; font-size: 1.05rem; margin: 0.5rem 0 1.2rem; }
     .links a { color: #93c5fd; margin-right: 1.2rem; font-size: 0.95rem; }
+    .links a.nav-link { color: #93c5fd; margin-left: 0.4rem; padding-left: 1.2rem; border-left: 1px solid rgba(255,255,255,0.2); }
 
     section { max-width: 1080px; margin: 0 auto; padding: 1.5rem 2rem; }
     section h2 { font-size: 1.5rem; margin-bottom: 1.4rem; padding-bottom: 0.4rem; border-bottom: 2px solid #e5e7eb; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 300px; gap: 3rem; align-items: start; }
+    .two-col .col-main h2, .two-col .col-side h2 { margin-top: 0; }
+
+    .edu-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.2rem; margin-bottom: 1rem; }
+    .edu-card .edu-logo { width: 32px; height: 32px; object-fit: contain; vertical-align: middle; margin-right: 0.5rem; }
+    .edu-card .edu-header { display: flex; align-items: center; margin-bottom: 0.4rem; }
+    .edu-card .edu-degree { font-size: 0.95rem; font-weight: 600; }
+    .edu-card .edu-school { font-size: 0.85rem; color: #4b5563; }
+    .edu-card .edu-date { font-size: 0.78rem; color: #6b7280; }
+    .edu-card .edu-detail { font-size: 0.82rem; color: #555; margin-top: 0.3rem; line-height: 1.4; }
+
+    @media (max-width: 800px) {
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+    }
 
     .timeline { position: relative; margin-left: 32px; padding-left: 36px; border-left: 2px solid #d1d5db; }
     .tl-item { position: relative; margin-bottom: 1.6rem; }
@@ -85,6 +101,7 @@
         <a href="https://github.com/Lukas-Xue">GitHub</a>
         <a href="https://www.linkedin.com/in/lukas-xue/">LinkedIn</a>
         <a href="https://scholar.google.com/citations?user=oaIhxugAAAAJ&hl=en&authuser=1">Google Scholar</a>
+        <a href="/blog" class="nav-link">Blog</a>
       </div>
     </div>
   </div>
@@ -96,91 +113,110 @@
 </section>
 
 <section>
-  <h2>Experience &amp; Education</h2>
-  <div class="timeline">
+  <div class="two-col">
+    <div class="col-main">
+      <h2>Experience</h2>
+      <div class="timeline">
 
-    <!-- AWS -->
-    <div class="tl-item">
-      <div class="tl-logo"><img src="img/aws.png" alt="AWS"></div>
-      <div class="tl-date">Feb 2023 – Present</div>
-      <div class="tl-title">Machine Learning Engineer</div>
-      <div class="tl-org">Amazon Web Services</div>
-      <div class="tl-desc">Progressed through multiple AWS AI/ML teams. Promoted to SDE II in April 2025.</div>
+        <!-- AWS -->
+        <div class="tl-item">
+          <div class="tl-logo"><img src="img/aws.png" alt="AWS"></div>
+          <div class="tl-date">Feb 2023 – Present</div>
+          <div class="tl-title">Machine Learning Engineer</div>
+          <div class="tl-org">Amazon Web Services</div>
+          <div class="tl-desc">Progressed through multiple AWS AI/ML teams. Promoted to SDE II in April 2025.</div>
 
-      <div class="tl-children">
-        <div class="tl-child">
-          <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
-          <div class="tl-date">May 2025 – Present</div>
-          <div class="tl-title">MLE · Custom Model Optimization (CMO)</div>
-          <div class="tl-org">AWS Generative AI Innovation Center</div>
-          <div class="tl-desc">Leading R&D in LLM post-training — CPT, SFT, and Reinforcement Learning (GRPO, DPO) — for models at tens-to-hundreds of billions of parameters (Nova, Qwen families). Training infrastructure with FSDP, DDP, HuggingFace, and Lightning on SageMaker HyperPods. Production inference with vLLM, Triton Inference Server, TensorRT, ONNX Runtime, and HuggingFace TEI on EKS and SageMaker endpoints. Also driving prompt optimization and model steering research.</div>
+          <div class="tl-children">
+            <div class="tl-child">
+              <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
+              <div class="tl-date">May 2025 – Present</div>
+              <div class="tl-title">MLE · Custom Model Optimization (CMO)</div>
+              <div class="tl-org">AWS Generative AI Innovation Center</div>
+              <div class="tl-desc">Leading R&D in LLM post-training — CPT, SFT, and Reinforcement Learning (GRPO, DPO) — for models at tens-to-hundreds of billions of parameters (Nova, Qwen families). Training infrastructure with FSDP, DDP, HuggingFace, and Lightning on SageMaker HyperPods. Production inference with vLLM, Triton Inference Server, TensorRT, ONNX Runtime, and HuggingFace TEI on EKS and SageMaker endpoints. Also driving prompt optimization and model steering research.</div>
+            </div>
+            <div class="tl-child">
+              <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
+              <div class="tl-date">Aug 2024 – May 2025</div>
+              <div class="tl-title">SDE → SDE II · Bedrock Model Customization</div>
+              <div class="tl-org">AWS</div>
+              <div class="tl-desc">Led development of Supervised Fine-Tuning for LLMs (Llama 3 family) in Amazon Bedrock. Re-architected custom model inference from merged adapters on provisioned throughput to adapter hotloading on base model capacity — enabling efficient multi-tenant serving without dedicated compute per adapter.</div>
+            </div>
+            <div class="tl-child">
+              <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
+              <div class="tl-date">Apr 2024 – Aug 2024</div>
+              <div class="tl-title">SDE · SageMaker AutoPilot &amp; Canvas</div>
+              <div class="tl-org">AWS</div>
+              <div class="tl-desc">AutoML for tabular data, time-series forecasting, and language model fine-tuning. Helped make ML accessible to non-practitioners through Canvas's no-code interface.</div>
+            </div>
+            <div class="tl-child">
+              <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
+              <div class="tl-date">Feb 2023 – Apr 2024</div>
+              <div class="tl-title">SDE · Managed Streaming for Apache Kafka (MSK)</div>
+              <div class="tl-org">AWS</div>
+              <div class="tl-desc">Kafka on AWS Graviton chips and MSK Express Brokers with a fully managed storage layer. Optimized performance and cost for real-time streaming workloads at scale.</div>
+            </div>
+          </div>
         </div>
-        <div class="tl-child">
-          <div class="tl-child-logo"><img src="img/trine.jpg" alt="Trine"></div>
-          <div class="tl-date">Aug 2025 – Present</div>
-          <div class="tl-title">M.S. in Information Studies (MSIS) · Part-time</div>
-          <div class="tl-org">Trine University <span class="gpa">· GPA: 4.0/4.0</span></div>
-          <div class="tl-desc">Pursuing a Master of Science in Information Studies part-time alongside full-time MLE work. Focus on data systems, information architecture, and applied research.</div>
-        </div>
-        <div class="tl-child">
-          <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
-          <div class="tl-date">Aug 2024 – May 2025</div>
-          <div class="tl-title">SDE → SDE II · Bedrock Model Customization</div>
-          <div class="tl-org">AWS</div>
-          <div class="tl-desc">Led development of Supervised Fine-Tuning for LLMs (Llama 3 family) in Amazon Bedrock. Re-architected custom model inference from merged adapters on provisioned throughput to adapter hotloading on base model capacity — enabling efficient multi-tenant serving without dedicated compute per adapter.</div>
-        </div>
-        <div class="tl-child">
-          <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
-          <div class="tl-date">Apr 2024 – Aug 2024</div>
-          <div class="tl-title">SDE · SageMaker AutoPilot &amp; Canvas</div>
-          <div class="tl-org">AWS</div>
-          <div class="tl-desc">AutoML for tabular data, time-series forecasting, and language model fine-tuning. Helped make ML accessible to non-practitioners through Canvas's no-code interface.</div>
-        </div>
-        <div class="tl-child">
-          <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
-          <div class="tl-date">Feb 2023 – Apr 2024</div>
-          <div class="tl-title">SDE · Managed Streaming for Apache Kafka (MSK)</div>
-          <div class="tl-org">AWS</div>
-          <div class="tl-desc">Kafka on AWS Graviton chips and MSK Express Brokers with a fully managed storage layer. Optimized performance and cost for real-time streaming workloads at scale.</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Emory B.S. -->
-    <div class="tl-item">
-      <div class="tl-logo padded"><img src="img/emory.gif" alt="Emory"></div>
-      <div class="tl-date">2021 – Dec 2022</div>
-      <div class="tl-title">B.S. Computer Science, Minor in Applied Mathematics</div>
-      <div class="tl-org">Emory University <span class="gpa">· GPA: 3.938 / 4.000</span></div>
-      <div class="tl-desc">Coursework in algorithms, systems, machine learning, and mathematical foundations.</div>
-
-      <div class="tl-children">
-        <div class="tl-child">
-          <div class="tl-child-logo"><img src="img/aws.png" alt="AWS"></div>
+        <!-- Internships -->
+        <div class="tl-item">
+          <div class="tl-logo"><img src="img/aws.png" alt="AWS"></div>
           <div class="tl-date">May 2022 – Aug 2022</div>
           <div class="tl-title">SDE Intern, MSK</div>
-          <div class="tl-org">AWS</div>
+          <div class="tl-org">Amazon Web Services</div>
           <div class="tl-desc">Built real-time fault-tolerant data pipelines and streaming infrastructure. First exposure to distributed systems at AWS scale.</div>
         </div>
-        <div class="tl-child">
-          <div class="tl-child-logo"><img src="img/maersk.png" alt="Maersk"></div>
+
+        <div class="tl-item">
+          <div class="tl-logo"><img src="img/maersk.png" alt="Maersk"></div>
           <div class="tl-date">Summer 2021</div>
           <div class="tl-title">Full Stack Intern</div>
           <div class="tl-org">A.P. Moller – Maersk</div>
           <div class="tl-desc">Modernized Maersk's shipping logistics platform. Built features for container tracking and shipment management across global supply chain operations.</div>
         </div>
+
       </div>
     </div>
 
-    <!-- Oxford College -->
-    <div class="tl-item">
-      <div class="tl-logo padded"><img src="img/emory.gif" alt="Oxford College"></div>
-      <div class="tl-date">2019 – 2021</div>
-      <div class="tl-title">Associate of Arts</div>
-      <div class="tl-org">Oxford College of Emory University</div>
-      <div class="tl-desc">Liberal arts foundation at Emory's original campus before transitioning to Atlanta for upper-division CS coursework.</div>
-    </div>
+    <div class="col-side">
+      <h2>Education</h2>
 
+      <div class="edu-card">
+        <div class="edu-header">
+          <img src="img/trine.jpg" alt="Trine" class="edu-logo">
+          <div>
+            <div class="edu-degree">M.S. Information Studies</div>
+            <div class="edu-school">Trine University</div>
+          </div>
+        </div>
+        <div class="edu-date">Aug 2025 – Present · Part-time</div>
+        <div class="edu-detail">GPA: 4.0/4.0. Focus on data systems, information architecture, and applied research.</div>
+      </div>
+
+      <div class="edu-card">
+        <div class="edu-header">
+          <img src="img/emory.gif" alt="Emory" class="edu-logo">
+          <div>
+            <div class="edu-degree">B.S. Computer Science</div>
+            <div class="edu-school">Emory University</div>
+          </div>
+        </div>
+        <div class="edu-date">2021 – Dec 2022</div>
+        <div class="edu-detail">Minor in Applied Mathematics. GPA: 3.938/4.000. Coursework in algorithms, systems, ML, and mathematical foundations.</div>
+      </div>
+
+      <div class="edu-card">
+        <div class="edu-header">
+          <img src="img/emory.gif" alt="Oxford College" class="edu-logo">
+          <div>
+            <div class="edu-degree">Associate of Arts</div>
+            <div class="edu-school">Oxford College of Emory University</div>
+          </div>
+        </div>
+        <div class="edu-date">2019 – 2021</div>
+        <div class="edu-detail">Liberal arts foundation before transitioning to Atlanta for upper-division CS coursework.</div>
+      </div>
+    </div>
   </div>
 </section>
 

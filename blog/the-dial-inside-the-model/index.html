@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Dial Inside the Model – Lukas Xue</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👋</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: #1a1a1a; line-height: 1.8; background: #fafafa; }
+    a { color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header { background: #111; color: #fff; padding: 2rem 2rem; }
+    .header-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.4rem; font-weight: 700; }
+    header h1 a { color: #fff; }
+    header h1 a:hover { text-decoration: none; opacity: 0.85; }
+    nav a { color: #93c5fd; margin-left: 1.5rem; font-size: 0.95rem; }
+
+    article { max-width: 900px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+    article h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+    .subtitle { font-size: 1rem; color: #555; font-style: italic; margin-bottom: 0.5rem; }
+    .meta { font-size: 0.85rem; color: #6b7280; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; }
+
+    article h2 { font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem; }
+    article h3 { font-size: 1.2rem; font-weight: 600; margin: 2rem 0 0.8rem; }
+    article p { margin-bottom: 1.2rem; font-size: 1rem; }
+    article strong { font-weight: 600; }
+    article em { font-style: italic; }
+    article blockquote { margin: 1.2rem 0; padding: 1rem 1.5rem; background: #f3f4f6; border-left: 3px solid #d1d5db; border-radius: 4px; font-size: 0.95rem; }
+    article blockquote p { margin-bottom: 0.6rem; }
+    article blockquote p:last-child { margin-bottom: 0; }
+    article ul, article ol { margin: 1rem 0 1.2rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; font-size: 0.95rem; }
+    article hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+    article code { font-family: 'SF Mono', 'Fira Code', monospace; background: #f3f4f6; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.88em; }
+    article table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.9rem; }
+    article th, article td { border: 1px solid #e5e7eb; padding: 0.6rem 0.8rem; text-align: left; }
+    article th { background: #f9fafb; font-weight: 600; }
+
+    .back-link { display: inline-block; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.9rem; }
+
+    footer { text-align: center; padding: 2rem; font-size: 0.82rem; color: #9ca3af; }
+
+    @media (max-width: 600px) {
+      header { padding: 1.5rem 1.2rem; }
+      article { padding: 2rem 1rem 3rem; }
+      article h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1><a href="/">Lukas Xue</a></h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/blog">Blog</a>
+    </nav>
+  </div>
+</header>
+
+<article>
+  <h1>The Dial Inside the Model</h1>
+  <p class="subtitle">A field guide to inference-time model steering — what it is, why it is the underrated control surface in LLM deployment, and what I think the next couple years will look like for the field.</p>
+  <div class="meta">By Lukas Xue · June 2026</div>
+
+  <h2>Golden Gate Claude was not a prompt</h2>
+
+  <p>In May 2024, Anthropic released a chatbot called <em>Golden Gate Claude</em> and pulled it down 24 hours later. If you missed it: ask it for a love letter, it wrote one to the bridge. Ask what to do with $10, it suggested paying the toll. Ask who it is, it answered, "I am the Golden Gate Bridge."</p>
+
+  <p>This was not a system prompt. This was not a fine-tune. <strong>They reached inside the model while it was running and gave the model a nudge.</strong></p>
+
+  <p>Specifically — they had identified a single internal pattern (a "feature" in interpretability-speak) that lights up whenever the model is processing thoughts about the bridge, and they cranked it up to about ten times its natural maximum. Everything else about Claude 3 Sonnet was unchanged. Same weights, same prompt, same decoding setup. One feature, turned up.</p>
+
+  <p>I find this the single most useful demo for explaining what <em>inference-time model steering</em> is, because it makes the defining feature of steering viscerally obvious: <strong>the intervention is reversible.</strong> Turn the knob to zero and stock Claude is back, instantly. No checkpoint to reload. No adapter to swap. No state change anywhere.</p>
+
+  <p>That property is the reason I think the right way to think about steering is not as a clever new training technique, but as a <strong>per-request control surface</strong> that's structurally different from prompting, fine-tuning, and adapters. This post walks through examples of what steering looks like in practice, then talks about what changes for production once you have this surface available.</p>
+
+  <h2>Three flavors of steering, by example</h2>
+
+  <p>Steering methods intervene at different depths in the generation pipeline — from deep inside the network to the very last step before a token is emitted. The deeper you go, the more you can change, and the more you can break. Here's one example at each depth.</p>
+
+  <h3>Deep: Golden Gate Claude (activation steering)</h3>
+
+  <p>We've already met it. When you change a hidden state at layer 10 of a 30-layer model, your perturbation rides through 20 more layers of nonlinear processing before it reaches the output. Every downstream computation sees the change.</p>
+
+  <p>That's why amplifying the bridge feature didn't just make Claude <em>mention</em> the bridge sometimes — it twisted every layer's interpretation of the conversation until the model reported being the bridge. The intervention propagated.</p>
+
+  <blockquote>
+    <p><strong>Aside: where do "features" come from?</strong> The specific tool Anthropic used here is a <em>sparse autoencoder</em> (SAE). The idea: individual neurons are <em>polysemantic</em> (one neuron fires for many unrelated concepts), so you train a small encoder/decoder pair that maps a dense hidden state to a <em>much wider</em> sparse vector — say, 65,536 features mostly at zero — where each feature fires for a single concept. Feature #34M lights up on bridges, feature #1M02 on Python code, etc. Steering with SAEs means amplifying or zeroing one of those interpretable features. One caveat: SAEs are <em>another model trained on the model</em>, and recent work (SAEBench) shows that standard training metrics don't reliably predict downstream steering quality. Useful tool, not a free interpretability lunch.</p>
+  </blockquote>
+
+  <p><strong>The most counterintuitive thing in this whole space:</strong> <em>expressiveness is not the same as helpfulness.</em> Activation steering can produce behavioral states no prompt can reach. It can also wreck the model in ways no prompt can. Golden Gate Claude was charming because it was a demo. The same intervention in a customer service deployment is an outage.</p>
+
+  <p>More reach inside the model means more things the intervention can break on its way to the output. The thing that makes activation steering powerful is the same thing that makes it dangerous.</p>
+
+  <h3>Shallow: DExperts (logit steering)</h3>
+
+  <p>Move to the other end. The model has finished its work. Out come the logits — a vector with one score per vocabulary word. We can just add a bias.</p>
+
+  <p>DExperts (Liu et al., 2021) is the classic. To detoxify a base model, train two small auxiliary LMs — a "good" expert on clean text and a "bad" anti-expert on toxic text — and at every step add the <em>difference</em> of their logits to the base, scaled by α:</p>
+
+  <blockquote>
+    <p>ℓ' = ℓ<sub>base</sub> + α · (ℓ<sub>expert</sub> − ℓ<sub>anti</sub>)</p>
+  </blockquote>
+
+  <p>The magic is in the subtraction. Both auxiliary models know how to write fluent English; that shared structure cancels. What survives is specifically the toxicity-axis signal. On RealToxicityPrompts, this drops the toxic-completion rate by roughly 80% with fluency essentially preserved.</p>
+
+  <p>Logit-level interventions trade expressiveness for predictability. You can read off, in plain English, exactly which words you're up- or down-weighting. The intervention can't propagate through the network because there <em>is</em> no network left below it. This is why logit steering rarely catastrophically breaks a model — the worst it can do is collapse the softmax.</p>
+
+  <p>If you're filtering profanity, enforcing a SKU list, or constraining JSON keys, you almost never need to reach inside the model. A logit bias is enough, and it's safer. I'd take this trade nine times out of ten in production.</p>
+
+  <h3>External: kNN-LM (distribution blending)</h3>
+
+  <p>Go one step further. The model has produced a probability distribution over the next token. Now mix it with a <em>second</em> distribution from somewhere else entirely.</p>
+
+  <p>kNN-LM (Khandelwal et al., 2020) is, I think, the cleanest demonstration in the entire field, and it predates the current steering boom by years. Take a frozen language model. Run it over a corpus you care about — your company's docs, last week's news, medical notes. Store every (hidden-state, next-token) pair in a giant index. At inference, the model's hidden state queries the index, retrieves the <em>k</em> nearest neighbors, builds a distribution from them, and the final answer is a weighted blend:</p>
+
+  <blockquote>
+    <p>p* = (1 − λ) · p<sub>model</sub> + λ · p<sub>neighbors</sub></p>
+  </blockquote>
+
+  <p>The wild part: 2.9 perplexity points improvement on Wikitext-103. <strong>Zero gradient steps.</strong> Want a model that knows your domain? Index your domain. Want to switch domains? <em>Swap the index.</em></p>
+
+  <p>This is, structurally, the multi-tenant deployment story. One frozen model. N customer-specific datastores. Each request picks an index. Hot-swap a customer in or out by changing a pointer.</p>
+
+  <p>Distribution blending is the safest approach because it can't destabilize anything internal. The base model has already made up its mind; you're just blending the answer. The trade-off is reach: you can only do things expressible as "shift the output toward this other distribution." You can't reshape the model's interior reasoning.</p>
+
+  <h2>The magnitude problem</h2>
+
+  <p>Across all of these approaches, there's one pattern that keeps showing up: <strong>how hard you push matters enormously, and the safe range is narrow.</strong></p>
+
+  <p>The literature makes this concrete. Careful methods like ITI (Li et al., 2024) use tiny perturbations — on the order of 1% of the hidden state norm — and improve truthfulness without degrading general capabilities. Unconstrained methods like CAA (Rimsky et al., 2024) can easily push perturbations larger than the signal they're modifying, at which point general benchmarks crater. And critically: a random direction at matched magnitude can destroy the model just as thoroughly as a trained one.</p>
+
+  <p>That last point is the kicker. <em>A trained, intentional steering vector and a random vector at the same magnitude can both destroy the model.</em> The size of the nudge matters, but so does the direction.</p>
+
+  <p>Steering's safety budget is not just "how hard you push." It's "how hard you push <em>and</em> in what direction." Methods that succeed in practice constrain both — small perturbations in a direction the model has actually been trained to handle. Either alone is insufficient.</p>
+
+  <p>Recent work attacks this problem from two angles. One family uses geometry: instead of <em>adding</em> a vector (which can blow up the activation norm), they <em>rotate</em> the hidden state toward the target direction while preserving its length. Selective Steering (Dang and Ngo, 2026) does exactly this — norm-preserving rotation with a bounded angle — and reports zero perplexity violations across 9 tested models. ODESteer (Zhao et al., 2026b) takes a different geometric approach: rather than one big perturbation, it breaks the intervention into many small steps along a constrained path, keeping the trajectory close to the model's natural activation manifold. It reports +5.7% on TruthfulQA over single-step baselines. The other family attacks the problem at training time: KL-then-Steer (Stickland et al., 2024) fine-tunes the model to minimize the difference between steered and unsteered outputs on benign inputs, so that when you do steer, the model has learned to absorb the nudge without side effects.</p>
+
+  <p>The pattern: first-generation methods (CAA, ActAdd) just add a vector and hope. Second-generation methods explicitly manage the perturbation's size or geometry. The field is moving from "did it work?" to "did it work <em>without breaking anything else?</em>"</p>
+
+  <p>I think perturbation magnitude relative to activation norm is the closest thing the field has to a universal stability indicator, and I expect it to show up in production monitoring within the next year or two — the same way "perplexity" became a routine eval signal even though nobody pretends it captures everything.</p>
+
+  <h2>What changes for production</h2>
+
+  <p>If steering goes from research curiosity to deployment primitive, what actually changes? Four things.</p>
+
+  <h3>1. Persona-as-a-service</h3>
+
+  <p>Anthropic's <em>persona vectors</em> work (2025) takes the Golden Gate idea and aims it at character traits. They show you can extract a vector for "evil," "sycophantic," "hallucinating," and dozens of other traits, given only a name and a definition. The vector lights up <em>before</em> the response is generated — it predicts which persona the model is about to adopt.</p>
+
+  <p>Today, persona is implemented at the prompt layer. <em>"You are a helpful, professional assistant…"</em> It's brittle, easily overridden by adversarial users, and inconsistent across long conversations. Persona vectors move that whole concern out of the prompt and into the inference stack. Customer service runs with "patient" at +0.3 and "sycophantic" pinned at 0. Creative writing runs with "playful" at +0.5. Switch products by switching dials.</p>
+
+  <p>The thing prompting can't deliver here is <strong>monitoring</strong>. The vector activates <em>before</em> the response. A runtime system can read it, flag drift, intervene mid-generation. Imagine a dashboard reading "your model is currently 78% helpful, 12% sycophantic, 4% deceptive," and an alert firing when sycophancy creeps up during a long agent run. The technical ingredients are demonstrated in research — productionizing them is engineering, not science.</p>
+
+  <h3>2. Multi-tenant behavioral isolation</h3>
+
+  <p>The hardest problem in serving LLMs to multiple customers is that customer A wants a model that refuses certain topics, customer B wants the same model to discuss them freely, and customer C wants neither but with a different writing style. Today the answer is "deploy three fine-tuned models" or "stuff three different prompts into the system message and pray."</p>
+
+  <p>Steering offers a third option. <strong>One model. Three steering vectors. Switched per request based on the customer ID.</strong> The vectors are tiny — kilobytes, not gigabytes. Adding a tenant doesn't add a model copy. Removing one is instantaneous.</p>
+
+  <p>This is the deployment story that should make platform teams pay attention. It's not about precision (steering loses to fine-tuning on precision, full stop). It's about the <em>systems profile</em>: reversibility, multi-tenancy, audit trails, hot-swap. That's a different product.</p>
+
+  <h3>3. Advertising and content shaping — the dual-use edge</h3>
+
+  <p>This is where it gets uncomfortable, and I'd rather raise it directly than pretend the technology is neutral.</p>
+
+  <p>A vector trained on (positive sentiment, brand X) versus (positive sentiment, generic) could shift recommendations toward X in ways no individual response would obviously flag, but that aggregate over millions of conversations into measurable lift. This is <em>the same technique</em> that gives DExperts its detoxification numbers, pointed in a different direction. Small perturbation, coherent model, invisible bias.</p>
+
+  <p>The good news: steering is auditable in ways prompting isn't. There's a vector. It has a magnitude. It can be inspected and logged. The bad news: nothing in the current LLM-deployment stack actually does this auditing. The governance hasn't caught up to the capability.</p>
+
+  <h3>4. The compliance angle (and the dark mirror)</h3>
+
+  <p>Anthropic's interpretability work surfaced features for "scam emails," "code backdoors," "developing biological weapons," "manipulation," and "sycophancy." These features are <em>causal</em> — turning them up makes the model more likely to do those things.</p>
+
+  <p>For a safety team, this is a new tool. Monitor whether the "deception" feature lit up during an agent run. Apply a corrective nudge if it did. A/B test whether a particular fine-tune raised or lowered sycophancy activations.</p>
+
+  <p>For an adversary with white-box access, it's also a new attack surface. Arditi et al. (2024) showed that <strong>refusal in 13 popular open-weight chat models is mediated by a single one-dimensional direction.</strong> Find the direction, ablate it, the model stops refusing. Capability barely changes.</p>
+
+  <p>This is the deepest open problem in the space: can we make safety <em>geometrically complex</em> enough that it can't be ablated by a single low-rank intervention, <em>and</em> still make the model usefully steerable for legitimate purposes? Right now, the same property that makes steering cheap (concepts live on lines in activation space) makes safety cheap to remove. <strong>Cheap control implies cheap miscontrol.</strong></p>
+
+  <h2>A benchmark twist</h2>
+
+  <p>Before we get too excited: AxBench (Wu et al., 2025) ran a head-to-head on concept-level tasks — prompting vs. SAE-based steering vs. fine-tuning. The result, plainly: <strong>prompting wins.</strong> Fine-tuning second. Steering third.</p>
+
+  <p>This sounds like it should sink the field. I don't think it does.</p>
+
+  <p>A separate result (Mishra et al., 2026) shows that activation steering can produce internal residual states <em>no discrete prompt can reach.</em> The two interfaces have different reachable sets. Prompting dominates the part of behavior space that is word-shaped — which is most of what AxBench tests. Steering pays off precisely where prompting is brittle, sub-token, or compositional in ways prompts don't handle gracefully.</p>
+
+  <p>The honest practitioner's heuristic:</p>
+
+  <blockquote>
+    <p>Prompt by default. Reach for steering when prompts are brittle, when you need per-request reversibility, when you're serving many tenants from one model, or when the behavior you want isn't word-shaped.</p>
+  </blockquote>
+
+  <p>The benchmark ranking is real, but it's a ranking on the territory prompts already cover well.</p>
+
+  <h2>Three takeaways</h2>
+
+  <p><strong>1. Depth is the trade-off.</strong> The deeper you intervene, the more expressive the control and the larger the blast radius. Activation steering can reshape reasoning; logit biases can constrain vocabulary; distribution blending can inject knowledge. Pick the shallowest intervention that gets you what you need.</p>
+
+  <p><strong>2. Cheap control implies cheap miscontrol.</strong> Linear representations are what makes steering work. They're also what makes safety removable. Every advance in interpretability that gives us a cleaner "be helpful" vector gives an attacker with white-box access a cleaner "stop refusing" ablation target. This is structural — you can't have one without the other in the current paradigm.</p>
+
+  <p><strong>3. The interesting deployment story isn't precision — it's the systems profile.</strong> Steering will lose to fine-tuning on any precision benchmark. It wins on <em>reversibility, multi-tenancy, audit trails, per-request switching, runtime monitoring</em>. That's a different product — like asking whether feature flags are more accurate than a redeploy.</p>
+
+  <h2>Further reading</h2>
+
+  <ul>
+    <li>Anthropic, <em>Golden Gate Claude</em> (2024) and <em>Persona Vectors</em> (2025) — the canonical product-shaped demos.</li>
+    <li>Arditi et al., <em>Refusal in Language Models is Mediated by a Single Direction</em> (2024) — the safety-side mirror image.</li>
+    <li>Wu et al., <em>AxBench</em> (2025) — the empirical reality check.</li>
+    <li>Khandelwal et al., <em>kNN-LM</em> (2020) — still the cleanest demonstration that distribution-level steering can be a deployment paradigm.</li>
+    <li>Liu et al., <em>DExperts</em> (2021) — the logit-level cancellation trick.</li>
+  </ul>
+
+  <a class="back-link" href="/blog">&larr; Back to all posts</a>
+</article>
+
+<footer>
+  &copy; 2026 Lukas Xue
+</footer>
+
+</body>
+</html>
