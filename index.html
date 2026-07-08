@@ -44,6 +44,8 @@
     .tl-logo { position: absolute; left: -56px; top: 0; width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 2px solid #d1d5db; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .tl-logo img { width: 36px; height: 36px; object-fit: contain; }
     .tl-logo.padded img { width: 30px; height: 30px; }
+    .tl-logo.lockup { left: -104px; width: 100px; border-radius: 8px; padding: 0 8px; }
+    .tl-logo.lockup img { width: 84px; height: auto; }
     .tl-date { font-size: 0.8rem; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
     .tl-title { font-size: 1.05rem; font-weight: 600; margin: 0.1rem 0; }
     .tl-org { font-size: 0.9rem; color: #4b5563; }
@@ -82,6 +84,8 @@
       .timeline { margin-left: 24px; padding-left: 28px; }
       .tl-logo { left: -46px; width: 34px; height: 34px; }
       .tl-logo img { width: 30px; height: 30px; object-fit: contain; }
+      .tl-logo.lockup { left: -82px; width: 76px; height: 34px; padding: 0 5px; }
+      .tl-logo.lockup img { width: 66px; height: auto; }
     }
   </style>
 </head>
@@ -92,7 +96,7 @@
     <img src="img/myself.jpeg" alt="Lukas Xue" class="headshot">
     <div class="header-text">
       <h1>Lukas (Renhao) Xue</h1>
-      <p>ML Research Engineer — LLM Post-Training, Alignment &amp; Inference<br>AWS Generative AI Innovation Center · B.S. in CS @ Emory University</p>
+      <p>Founder, <a href="https://www.docos.dev/">DocOS, Inc.</a> · ML Research Engineer<br>LLM Post-Training, Alignment &amp; Inference · AWS Generative AI Innovation Center</p>
       <div class="links">
         <a href="https://github.com/Lukas-Xue">GitHub</a>
         <a href="https://www.linkedin.com/in/lukas-xue/">LinkedIn</a>
@@ -106,6 +110,7 @@
 <section>
   <h2>About</h2>
   <p style="font-size:0.95rem; color:#333; max-width:720px;">I work across the full model customization stack — from RLHF and reward modeling to efficient serving — with a strong interest in mechanistic interpretability. I build production systems for training and deploying models at tens-to-hundreds of billions of parameters, and publish at top venues including ICML.</p>
+  <p style="font-size:0.95rem; color:#333; max-width:720px; margin-top:0.8rem;">I am the founder of <a href="https://www.docos.dev/">DocOS, Inc.</a></p>
 </section>
 
 <section>
@@ -113,6 +118,14 @@
     <div class="col-main">
       <h2>Experience</h2>
       <div class="timeline">
+
+        <!-- DocOS -->
+        <div class="tl-item">
+          <div class="tl-logo lockup"><img src="img/docos-lockup.svg" alt="DocOS"></div>
+          <div class="tl-date">Jul 2026 – Present</div>
+          <div class="tl-title">Founder</div>
+          <div class="tl-org"><a href="https://www.docos.dev/">DocOS, Inc.</a></div>
+        </div>
 
         <!-- AWS -->
         <div class="tl-item">
