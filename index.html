@@ -24,6 +24,11 @@
     section { max-width: 1080px; margin: 0 auto; padding: 1.5rem 2rem; }
     section h2 { font-size: 1.5rem; margin-bottom: 1.4rem; padding-bottom: 0.4rem; border-bottom: 2px solid #e5e7eb; }
 
+    .intro { font-size: 0.95rem; color: #333; max-width: 760px; }
+    .intro + .intro { margin-top: 0.8rem; }
+    .focus-row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem; max-width: 800px; }
+    .tag { display: inline-flex; align-items: center; border: 1px solid #d1d5db; border-radius: 999px; padding: 0.25rem 0.55rem; font-size: 0.78rem; color: #374151; background: #fff; }
+
     .two-col { display: grid; grid-template-columns: 1fr 300px; gap: 3rem; align-items: start; }
     .two-col .col-main h2, .two-col .col-side h2 { margin-top: 0; }
 
@@ -79,6 +84,8 @@
 
     @media (max-width: 600px) {
       header { padding: 2.5rem 1.2rem 2rem; }
+      .header-inner { flex-direction: column; gap: 1rem; }
+      .header-text { text-align: center; }
       header h1 { font-size: 1.8rem; }
       section { padding: 2rem 1rem; }
       .timeline { margin-left: 24px; padding-left: 28px; }
@@ -96,11 +103,13 @@
     <img src="img/myself.jpeg" alt="Lukas Xue" class="headshot">
     <div class="header-text">
       <h1>Lukas (Renhao) Xue</h1>
-      <p>Founder, <a href="https://www.docos.dev/">DocOS, Inc.</a> · ML Research Engineer<br>LLM Post-Training, Alignment &amp; Inference · AWS Generative AI Innovation Center</p>
+      <!-- Restore later: <p>ML Research Engineer · LLM Post-Training, Alignment &amp; Inference at Scale<br>AWS Generative AI Innovation Center · Founder, <a href="https://www.docos.dev/">DocOS, Inc.</a></p> -->
+      <p>ML Research Engineer · LLM Post-Training, Alignment &amp; Inference at Scale<br>AWS Generative AI Innovation Center</p>
       <div class="links">
         <a href="https://github.com/Lukas-Xue">GitHub</a>
         <a href="https://www.linkedin.com/in/lukas-xue/">LinkedIn</a>
         <a href="https://scholar.google.com/citations?user=oaIhxugAAAAJ&hl=en&authuser=1">Google Scholar</a>
+        <a href="mailto:lukas.rxue@gmail.com">Email</a>
         <a href="/blog" class="nav-link">Blog</a>
       </div>
     </div>
@@ -109,8 +118,16 @@
 
 <section>
   <h2>About</h2>
-  <p style="font-size:0.95rem; color:#333; max-width:720px;">I work across the full model customization stack — from RLHF and reward modeling to efficient serving — with a strong interest in mechanistic interpretability. I build production systems for training and deploying models at tens-to-hundreds of billions of parameters, and publish at top venues including ICML.</p>
-  <p style="font-size:0.95rem; color:#333; max-width:720px; margin-top:0.8rem;">I am the founder of <a href="https://www.docos.dev/">DocOS, Inc.</a></p>
+  <p class="intro">I build foundation-model systems across post-training, alignment, and inference. My work sits between research and production: turning model-customization ideas into scalable training and serving systems for enterprise GenAI workloads.</p>
+  <!-- Restore later: <p class="intro">I am currently an MLE II in the AWS Generative AI Innovation Center, a recurring contributor/code owner in AWS open source, and the founder of <a href="https://www.docos.dev/">DocOS, Inc.</a></p> -->
+  <p class="intro">I am currently an MLE II in the AWS Generative AI Innovation Center and a recurring contributor/code owner in AWS open source.</p>
+  <div class="focus-row" aria-label="Focus areas">
+    <span class="tag">Post-training</span>
+    <span class="tag">Alignment</span>
+    <span class="tag">Inference optimization</span>
+    <span class="tag">Distributed training</span>
+    <span class="tag">Model steering</span>
+  </div>
 </section>
 
 <section>
@@ -119,13 +136,15 @@
       <h2>Experience</h2>
       <div class="timeline">
 
-        <!-- DocOS -->
+        <!-- Restore later:
         <div class="tl-item">
           <div class="tl-logo lockup"><img src="img/docos-lockup.svg" alt="DocOS"></div>
           <div class="tl-date">Jul 2026 – Present</div>
           <div class="tl-title">Founder</div>
           <div class="tl-org"><a href="https://www.docos.dev/">DocOS, Inc.</a></div>
+          <div class="tl-desc">Building AI-native document infrastructure for complex business workflows.</div>
         </div>
+        -->
 
         <!-- AWS -->
         <div class="tl-item">
@@ -133,19 +152,19 @@
           <div class="tl-date">Feb 2023 – Present</div>
           <div class="tl-title">Machine Learning Engineer</div>
           <div class="tl-org">Amazon Web Services</div>
-          <div class="tl-desc">Progressed through multiple AWS AI/ML teams. Promoted to SDE II in April 2025.</div>
+          <div class="tl-desc">ML and systems engineering across AWS Generative AI Innovation Center, Amazon Bedrock, SageMaker, and Managed Streaming for Apache Kafka. Promoted to SDE II in April 2025.</div>
 
           <div class="tl-children">
             <div class="tl-child">
               <div class="tl-date">May 2025 – Present</div>
               <div class="tl-title">MLE · Custom Model Optimization (CMO)</div>
               <div class="tl-org">AWS Generative AI Innovation Center</div>
-              <div class="tl-desc">Leading R&D in LLM post-training — CPT, SFT, and Reinforcement Learning (GRPO, DPO) — for models at tens-to-hundreds of billions of parameters (Nova, Qwen families). Training infrastructure with FSDP, DDP, HuggingFace, and Lightning on SageMaker HyperPods. Production inference with vLLM, Triton Inference Server, TensorRT, ONNX Runtime, and HuggingFace TEI on EKS and SageMaker endpoints. Also driving prompt optimization and model steering research.</div>
+              <div class="tl-desc">Work on LLM/VLM post-training, distributed training, inference optimization, and agentic-system components for enterprise GenAI customers.</div>
             </div>
             <div class="tl-child">
               <div class="tl-date">Aug 2024 – May 2025</div>
               <div class="tl-title">SDE → SDE II · Bedrock Model Customization</div>
-              <div class="tl-desc">Led development of Supervised Fine-Tuning for LLMs (Llama 3 family) in Amazon Bedrock. Re-architected custom model inference from merged adapters on provisioned throughput to adapter hotloading on base model capacity — enabling efficient multi-tenant serving without dedicated compute per adapter.</div>
+              <div class="tl-desc">Built model-customization infrastructure for fine-tuning, distillation, and multi-tenant adapter serving in Amazon Bedrock.</div>
             </div>
             <div class="tl-child">
               <div class="tl-date">Apr 2024 – Aug 2024</div>
@@ -155,7 +174,7 @@
             <div class="tl-child">
               <div class="tl-date">Feb 2023 – Apr 2024</div>
               <div class="tl-title">SDE · Managed Streaming for Apache Kafka (MSK)</div>
-              <div class="tl-desc">Kafka on AWS Graviton chips and MSK Express Brokers with a fully managed storage layer. Optimized performance and cost for real-time streaming workloads at scale.</div>
+              <div class="tl-desc">Worked on Kafka infrastructure, AWS Graviton support, and managed streaming systems at AWS scale.</div>
             </div>
           </div>
         </div>
@@ -243,7 +262,7 @@
       <li><a href="https://github.com/Lukas-Xue/awesome-inference-time-steering">awesome-inference-time-steering</a> — Curated paper collection on inference-time model steering via internal interventions. <a href="https://www.researchsquare.com/article/rs-9849186/v1">Paper</a> <span class="meta"><img src="https://img.shields.io/github/stars/Lukas-Xue/awesome-inference-time-steering?style=social" alt="stars" style="height:1.6em;vertical-align:-0.3em;margin-left:0.3rem"></span></li>
       <li><a href="https://github.com/wang-henry4/prism">PRISM</a> — Autoregressive transformer for inverse thin-film optical design. <a href="https://www.prism-playground.com/">Playground</a> · <a href="https://arxiv.org/abs/2605.26502">Paper</a> <span class="meta"><img src="https://img.shields.io/github/stars/wang-henry4/prism?style=social" alt="stars" style="height:1.6em;vertical-align:-0.3em;margin-left:0.3rem"></span></li>
       <li><a href="https://github.com/Lukas-Xue/nanoLLaDA"><img src="img/nanollada.png" alt="nanoLLaDA" class="oss-logo">nanoLLaDA</a> — Minimal masked diffusion language model (~500 lines). Pretraining &amp; generation for LLaDA. <span class="meta"><img src="https://img.shields.io/github/stars/Lukas-Xue/nanoLLaDA?style=social" alt="stars" style="height:1.6em;vertical-align:-0.3em;margin-left:0.3rem"></span></li>
-      <li><a href="https://github.com/awslabs/mcp/tree/main/src/mcp-lambda-handler">mcp-lambda-handler</a> — Serverless MCP HTTP handler for AWS Lambda with pluggable session management. <span class="meta"><img src="https://img.shields.io/github/stars/awslabs/mcp?style=social" alt="stars" style="height:1.6em;vertical-align:-0.3em;margin-left:0.3rem"></span></li>
+      <li><a href="https://github.com/awslabs/mcp">awslabs/mcp</a> — Code owner and recurring contributor to AWS's official Model Context Protocol repository, including serverless MCP infrastructure. <span class="meta"><img src="https://img.shields.io/github/stars/awslabs/mcp?style=social" alt="stars" style="height:1.6em;vertical-align:-0.3em;margin-left:0.3rem"></span></li>
       <li><a href="https://main.d359pb94r9dapm.amplifyapp.com/">OpenAcademiaRating</a> — Open-source, privacy-first professor rating platform focused on graduate advising and mentorship outcomes.</li>
       <li><a href="https://d2yjleo51brcqy.cloudfront.net/">AI Paper Digest</a> — Daily top 5 AI/ML papers ranked by community upvotes, with generated summaries and detailed modal views.</li>
     </ul>
