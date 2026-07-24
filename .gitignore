@@ -1,0 +1,6 @@
+.DS_Store
+resume/.agents/
+resume/.claude/
+resume/cover_letter_*.md
+resume/referral_summary.md
+resume/skills-lock.json
