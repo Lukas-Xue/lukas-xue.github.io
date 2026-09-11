@@ -14,6 +14,7 @@ A single-page personal bio site deployed on GitHub Pages at `https://lukas-xue.g
     ├── trine.jpg       # Trine University seal (Wikipedia)
     ├── nanollada.png   # nanoLLaDA project logo (from GitHub repo)
     ├── cert-claude-architect.png
+    ├── cert-claude-developer.png
     ├── cert-ai-dlc.png
     ├── cert-ai-foundational.png
     ├── cert-ai-practitioner.png
